@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "timestamp(producto)": "2022-10-04T01:22:44.765Z",
+    "name": "Starcraft 2",
+    "description": "RTS futurista",
+    "code": 44412,
+    "urlImage": "https://bnetcmsus-a.akamaihd.net/cms/blog_header/2g/2G4VZH5TIWJF1602720144046.jpg",
+    "price": 1500,
+    "stock": 50
+  }
+]
