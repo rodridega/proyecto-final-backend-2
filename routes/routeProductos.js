@@ -4,7 +4,9 @@ import { productosDao as productosApi } from '../daos/index.js'
 const routerProductos = Router()
 let administrador = true
 
-routerProductos.get('/', async(req, res) => {  // Devuelve todos los productos.
+
+//MUESTRA TODOS LOS PRODUCTOS
+routerProductos.get('/', async(req, res) => {  
     let allProductos = await productosApi.getAll()
     if(allProductos.length === 0){
         res.send({ "error" : "No existen productos" })    
@@ -13,7 +15,8 @@ routerProductos.get('/', async(req, res) => {  // Devuelve todos los productos.
     }   
 })
 
-routerProductos.get('/:id', async(req, res) => { //Devuelve un producto según su id
+// MUESTRA UN PRODUCTO SEGUN SU ID
+routerProductos.get('/:id', async(req, res) => { 
     let allProductos = await productosApi.getAll()
     const iD = allProductos.find(producto => parseInt(producto.id) === parseInt(req.params.id));
     if (iD) {
@@ -24,22 +27,27 @@ routerProductos.get('/:id', async(req, res) => { //Devuelve un producto según s
 })
 
 
-routerProductos.post('/', async(req, res) => { //Recibe y agrega un producto, y lo devuelve con su id asignado
+// AGREGA UN PRODUCTO Y MUESTRA SU ID ASIGNADO
+routerProductos.post('/', async(req, res) => { 
     if(administrador){
+ 
         const { name, description, code, urlImage, price, stock } = req.body
+        
         let allProductos = await productosApi.getAll()
         let newId
         let fecha = new Date()
 
+       
         if(!name || !description || !code || !urlImage || !price || !stock){
-            res.status(400).json({ "error": "Ingrese todos los datos del producto" });
+            console.log("if", name);
+            res.status(400).json({ "error": "Faltan datos en el producto que intentas guardar" });
         }
-
         if(allProductos.length === 0){
             newId=1
         }else{
             newId = parseInt(allProductos[allProductos.length-1].id) + 1
         }
+       
         allProductos.push({id: newId, 'timestamp(producto)': fecha, name, description, code, urlImage, price, stock})
         await productosApi.saveAll(allProductos)
         res.send({id: newId, 'timestamp(producto)': fecha, name, description, code, urlImage, price, stock}) 
@@ -50,7 +58,8 @@ routerProductos.post('/', async(req, res) => { //Recibe y agrega un producto, y 
     }        
 })
 
-routerProductos.put('/:id', async(req, res) => { //Recibe y actualiza un producto según su id
+//ACTUALIZA UN PRODUCTO SEGUN SU ID
+routerProductos.put('/:id', async(req, res) => { 
     if(administrador){ 
         let allProductos = await productosApi.getAll()   
         const iD = allProductos.find(producto => parseInt(producto.id) === parseInt(req.params.id));
@@ -86,7 +95,9 @@ routerProductos.put('/:id', async(req, res) => { //Recibe y actualiza un product
     }
 })
 
-routerProductos.delete('/:id', async(req, res) => { //Elimina un producto según su id   
+
+// ELIMINA UN PRODUCTO SEGUN SU ID
+routerProductos.delete('/:id', async(req, res) => { 
     if(administrador){  
         let allProductos = await productosApi.getAll()  
         const iD = allProductos.find(producto => parseInt(producto.id) === parseInt(req.params.id));

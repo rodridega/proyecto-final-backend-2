@@ -18,11 +18,14 @@ class ContenedorFirebase {
             const result = []
             const snapshot = await this.coleccion.get();
             snapshot.forEach(doc => {
+                
                 result.push({ id: doc.id, ...doc.data() })
             })
-            return result
+            
 
+            return result
         } catch (err) {
+            console.log(err);
             return []
         }
     }
@@ -44,6 +47,7 @@ class ContenedorFirebase {
     async saveAll(arrayItems){
         try{
             let preSave = await this.getAll()
+            
             if(preSave.length === 0){
                 await this.createAll(arrayItems)
             }else{
@@ -59,6 +63,7 @@ class ContenedorFirebase {
     }
 
     async save(newObj){
+        
         const informacion = await this.getAll()
         let newId
         if(informacion.length == 0){
@@ -102,17 +107,20 @@ class ContenedorFirebase {
     }
 
     async createAll(arrayCreate){
+        console.log(arrayCreate);
         if("timestamp(producto)" in arrayCreate[0]) {
             for(let i = 0; i < arrayCreate.length; i++ ){
                 let doc = this.coleccion.doc(`${arrayCreate[i].id}`)
+                console.log("array",  arrayCreate[i]);
+
                 await doc.create(
                     {
                         "timestamp(producto)": arrayCreate[i]["timestamp(producto)"], 
-                        "nombre": arrayCreate[i].nombre,
-                        "descripcion": arrayCreate[i].descripcion,
-                        "codigo": arrayCreate[i].codigo,
-                        "foto": arrayCreate[i].foto,
-                        "precio": arrayCreate[i].precio,
+                        "name": arrayCreate[i].name,
+                        "description": arrayCreate[i].description,
+                        "code": arrayCreate[i].code,
+                        "urlImage": arrayCreate[i].urlImage,
+                        "price": arrayCreate[i].price,
                         "stock": arrayCreate[i].stock
                     }
                 )   
